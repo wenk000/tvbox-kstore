@@ -1,7 +1,11 @@
 name: Generate TVBox Source
+
 on:
-  push:
+  # 只允许手动触发 + 定时任务，禁止 push 触发（避免循环）
   workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'   # 每6小时自动更新一次
+    # UTC时间，对应北京时间 6:00 / 12:00 / 18:00 / 0:00
 
 jobs:
   build:
@@ -10,15 +14,20 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Generate Config
         run: python generate.py
-      - name: Commit
+
+      - name: Commit & Push
         uses: EndBug/add-and-commit@v9
         with:
           message: "Auto update source"
-          committer_name: GitHub Actions
+          committer_name: GitHub Actions Bot
           committer_email: actions@github.com
+          # 关键：如果没有变更就不 commit（防止空 commit 触发循环）
+          add: 'download/**/*.json'
