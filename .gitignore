@@ -1,0 +1,4 @@
+# Cloudflare Pages / Wrangler 排除文件
+.git/
+.wrangler/
+*.log
