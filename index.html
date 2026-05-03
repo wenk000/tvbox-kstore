@@ -3,15 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TVBox 配置接口</title>
+    <title>TVBox 多仓接口 - 杰翔易达</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .notice {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 24px 28px;
+            margin-bottom: 28px;
+        }
+        .notice p { margin-bottom: 10px; font-size: 14px; color: #aaa; }
+        .notice p:last-child { margin-bottom: 0; }
+        .notice .highlight { color: #ff6b6b; font-weight: bold; }
+        .notice a { color: #4ecdc4; text-decoration: none; }
+        .card {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            font-size: 18px;
+            color: #4ecdc4;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .url-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 14px 18px;
+            font-family: "Fira Code", "Cascadia Code", monospace;
+            font-size: 13px;
+            word-break: break-all;
+            color: #58a6ff;
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 4px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover { background: #30363d; color: #fff; }
+        .source-list {
+            list-style: none;
+            margin-top: 16px;
+        }
+        .source-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid #2a2a2a;
+            font-size: 14px;
+        }
+        .source-list li:last-child { border-bottom: none; }
+        .source-name { color: #e0e0e0; font-weight: 500; }
+        .source-url {
+            color: #888;
+            font-family: monospace;
+            font-size: 12px;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #555;
+        }
+        .badge {
+            display: inline-block;
+            background: #238636;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+    </style>
 </head>
 <body>
-    <pre id="config"></pre>
-    <script>
-        fetch('/tvbox.json')
-            .then(r => r.json())
-            .then(d => document.getElementById('config').textContent = JSON.stringify(d, null, 2))
-            .catch(() => document.getElementById('config').textContent = '配置加载中...');
-    </script>
+<div class="container">
+
+    <!-- 声明区域 -->
+    <div class="notice">
+        <p>🙏 阁下好手段，还请高抬贵手，放小弟一马，都是百度上谷歌来的，没啥价值，去扒别人的源吧。</p>
+        <p>📦 此多仓接口列表为公众号<span class="highlight">【杰翔易达】</span>为粉丝提供便利整理而成，如有冒犯各位接口所属大神，<a href="#">请联系删除</a>。</p>
+    </div>
+
+    <!-- 接口地址 -->
+    <div class="card">
+        <h2>📡 TVBox 多仓接口地址</h2>
+        <div class="url-box" id="urlBox">
+            <span id="apiUrl">加载中...</span>
+            <button class="copy-btn" onclick="copyUrl()">复制</button>
+        </div>
+    </div>
+
+    <!-- 接口列表 -->
+    <div class="card">
+        <h2>📋 当前可用线路 <span id="countBadge" class="badge">-- 条</span></h2>
+        <ul class="source-list" id="sourceList">
+            <li><span class="source-name">加载中...</span></li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p>自动更新间隔：每 6 小时 · 由 GitHub Actions 驱动</p>
+    </div>
+
+</div>
+
+<script>
+const API_URL = '/download/1/tvbox/source.json';
+
+async function loadConfig() {
+    try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+
+        // 显示完整 URL
+        const fullUrl = window.location.origin + API_URL;
+        document.getElementById('apiUrl').textContent = fullUrl;
+
+        // 渲染线路列表
+        const list = document.getElementById('sourceList');
+        document.getElementById('countBadge').textContent = data.urls.length + ' 条';
+
+        list.innerHTML = data.urls.map((s, i) => `
+            <li>
+                <span class="source-name">${i + 1}. ${s.name}</span>
+                <span class="source-url" title="${s.url}">${s.url}</span>
+            </li>
+        `).join('');
+    } catch (e) {
+        document.getElementById('apiUrl').textContent = '加载失败';
+        document.getElementById('sourceList').innerHTML = '<li><span class="source-name">无法加载配置</span></li>';
+    }
+}
+
+function copyUrl() {
+    const url = document.getElementById('apiUrl').textContent;
+    navigator.clipboard.writeText(url);
+    document.querySelector('.copy-btn').textContent = '已复制 ✅';
+    setTimeout(() => document.querySelector('.copy-btn').textContent = '复制', 2000);
+}
+
+loadConfig();
+</script>
 </body>
 </html>
