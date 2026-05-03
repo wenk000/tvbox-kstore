@@ -3,7 +3,7 @@ name: Generate TVBox Source
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */6 * * *'
+    - cron: '0 */6 * * *'   # 每6小时更新一次（UTC时间）
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0   # 完整历史，commit 必需
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -30,3 +30,4 @@ jobs:
           committer_name: GitHub Actions
           committer_email: actions@github.com
           add: "download/*"
+
