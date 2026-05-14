@@ -1,3 +1,0 @@
-# TVBox 配置接口 - 直接返回 200，不做重定向
-# Admin 管理页面
-/admin /admin.html 200

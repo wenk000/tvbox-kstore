@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TVBox 管理后台 - 杰翔易达</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at 20% 50%, rgba(78, 205, 196, 0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
+                        radial-gradient(ellipse at 50% 80%, rgba(236, 72, 153, 0.04) 0%, transparent 50%);
+            animation: bgDrift 20s ease-in-out infinite;
+            z-index: 0;
+        }
+        @keyframes bgDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-2%, 1%) rotate(1deg); }
+            66% { transform: translate(1%, -1%) rotate(-0.5deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* ===== Login Screen ===== */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        .login-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        .login-card {
+            background: rgba(30, 30, 46, 0.85);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 18px;
+            padding: 36px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 16px 64px rgba(0,0,0,0.4);
+        }
+        .input-group { margin-bottom: 22px; }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 13px 18px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 11px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15);
+        }
+        .input-group input::placeholder { color: #444; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 26px;
+            border: none;
+            border-radius: 11px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #fff;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            width: 100%;
+            box-shadow: 0 5px 24px rgba(78, 205, 196, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(78, 205, 196, 0.42);
+        }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.28);
+            color: #ef4444;
+            padding: 6px 16px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.24); }
+        .btn-secondary {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #aaa;
+            padding: 6px 16px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+        .btn-secondary:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+        .login-error {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.18);
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #ef4444;
+            margin-bottom: 18px;
+            display: none;
+        }
+
+        /* ===== Admin Dashboard ===== */
+        .admin-screen {
+            display: none;
+            animation: fadeIn 0.45s ease;
+        }
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .admin-header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4ecdc4, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .admin-header .user-info { display: flex; align-items: center; gap: 12px; }
+        .admin-header .user-badge {
+            background: rgba(78, 205, 196, 0.1);
+            color: #4ecdc4;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: rgba(30, 30, 46, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 26px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .card-header .icon {
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 17px;
+        }
+        .card-header .icon.green { background: rgba(78, 205, 196, 0.12); }
+        .card-header .icon.blue { background: rgba(99, 102, 241, 0.12); }
+        .card-header h2 { font-size: 16px; font-weight: 600; color: #fff; }
+
+        /* Source list */
+        .source-list { list-style: none; }
+        .source-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-radius: 11px;
+            margin-bottom: 8px;
+            background: rgba(0,0,0,0.22);
+            border: 1px solid rgba(255,255,255,0.04);
+            transition: all 0.22s;
+        }
+        .source-item:hover {
+            background: rgba(0,0,0,0.38);
+            border-color: rgba(255,255,255,0.08);
+            transform: translateX(3px);
+        }
+        .source-info { flex: 1; min-width: 0; }
+        .source-info .name {
+            font-size: 14px; font-weight: 600; color: #e0e0e0; margin-bottom: 4px;
+        }
+        .source-info .url {
+            font-size: 12px; color: #666; font-family: "Fira Code", "Cascadia Code", monospace;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .source-info .meta { font-size: 11px; color: #444; margin-top: 4px; }
+        .source-actions { margin-left: 14px; flex-shrink: 0; }
+
+        .empty-state { text-align: center; padding: 44px 20px; color: #555; }
+        .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+        .empty-state p { font-size: 14px; }
+
+        /* Stats */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.22);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 13px;
+            padding: 18px;
+            text-align: center;
+        }
+        .stat-card .value { font-size: 28px; font-weight: 750; color: #fff; margin-bottom: 4px; }
+        .stat-card .label { font-size: 12px; color: #666; }
+        .stat-card .value.green { color: #4ecdc4; }
+        .stat-card .value.blue { color: #6366f1; }
+        .stat-card .value.pink { color: #ec4899; }
+
+        /* Toast notification */
+        .toast {
+            position: fixed; top: 20px; right: 20px;
+            background: rgba(25, 25, 40, 0.96);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 13px;
+            padding: 14px 22px;
+            font-size: 14px; color: #fff;
+            z-index: 1000;
+            transform: translateX(130%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 330px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-left: 3.5px solid #4ecdc4; }
+        .toast.error { border-left: 3.5px solid #ef4444; }
+
+        /* Password toggle */
+        .password-wrapper { position: relative; }
+        .password-toggle {
+            position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: #555; cursor: pointer;
+            font-size: 15px; padding: 4px;
+        }
+        .password-toggle:hover { color: #888; }
+        .password-wrapper input { padding-right: 46px; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container { padding: 24px 16px; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .admin-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+            .source-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .source-actions { margin-left: 0; }
+            .login-title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+    <h1 class="login-title">TVBox 管理后台</h1>
+    <p class="login-subtitle">杰翔易达 · 自定义接口管理</p>
+    <div class="login-card">
+        <div class="login-error" id="loginError">密码错误，请重试</div>
+        <div class="input-group">
+            <label>管理密码</label>
+            <div class="password-wrapper">
+                <input type="password" id="passwordInput" placeholder="输入管理密码" autofocus>
+                <button class="password-toggle" onclick="togglePassword()" type="button">&#128065;</button>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="login()">&#128274; 进入管理后台</button>
+    </div>
+</div>
+
+<!-- Admin Dashboard -->
+<div class="admin-screen" id="adminScreen">
+    <div class="container">
+        <div class="admin-header">
+            <h1>管理后台</h1>
+            <div class="user-info">
+                <span class="user-badge">&#10003; 已认证</span>
+                <button class="btn btn-secondary" onclick="logout()">退出登录</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="value green" id="customCount">-</div>
+                <div class="label">自定义接口</div>
+            </div>
+            <div class="stat-card">
+                <div class="value blue" id="totalCount">-</div>
+                <div class="label">总线路数</div>
+            </div>
+            <div class="stat-card">
+                <div class="value pink" id="lastUpdate">-</div>
+                <div class="label">上次更新</div>
+            </div>
+        </div>
+
+        <!-- Add new source -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon green">&#10133;</div>
+                <h2>添加自定义接口</h2>
+            </div>
+            <div class="input-group">
+                <label>接口名称</label>
+                <input type="text" id="newName" placeholder="例如：我的线路">
+            </div>
+            <div class="input-group">
+                <label>接口地址</label>
+                <input type="text" id="newUrl" placeholder="例如：https://example.com/tv">
+            </div>
+            <button class="btn btn-primary" onclick="addSource()" style="margin-top: 4px;">&#10003; 添加接口</button>
+        </div>
+
+        <!-- Source list -->
+        <div class="card">
+            <div class="card-header">
+                <div class="icon blue">&#128203;</div>
+                <h2>当前自定义接口</h2>
+            </div>
+            <ul class="source-list" id="sourceList">
+                <li class="empty-state"><div class="icon">&#128194;</div><p>暂无自定义接口</p></li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px; font-size: 12px; color: #444;">
+            TVBox Admin &copy; 杰翔易达
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+    const API_BASE = "/api/admin";
+    let authToken = sessionStorage.getItem("tvbox_admin_token") || null;
+
+    if (authToken) showAdmin();
+
+    document.getElementById("passwordInput").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") login();
+    });
+
+    function togglePassword() {
+        var i = document.getElementById("passwordInput");
+        i.type = i.type === "password" ? "text" : "password";
+    }
+
+    function showToast(msg, type) {
+        var t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(function() { t.classList.remove("show"); }, 3200);
+    }
+
+    async function login() {
+        var pwd = document.getElementById("passwordInput").value.trim();
+        if (!pwd) { showError("请输入密码"); return; }
+
+        try {
+            // 先尝试用用户输入的密码
+            var res = await fetch(API_BASE, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer " + pwd },
+                body: JSON.stringify({ action: "login" }),
+            });
+            var data = await res.json();
+
+            if (res.ok) {
+                authToken = pwd;
+                sessionStorage.setItem("tvbox_admin_token", pwd);
+                showAdmin();
+            } else {
+                showError(data.error || "密码错误");
+                document.getElementById("passwordInput").select();
+            }
+        } catch (e) { showError("连接失败: " + e.message); }
+    }
+
+    function showError(msg) {
+        var el = document.getElementById("loginError");
+        el.textContent = msg;
+        el.style.display = "block";
+    }
+
+    function logout() {
+        authToken = null;
+        sessionStorage.removeItem("tvbox_admin_token");
+        document.getElementById("loginScreen").style.display = "flex";
+        document.getElementById("adminScreen").style.display = "none";
+        document.getElementById("passwordInput").value = "";
+        document.getElementById("loginError").style.display = "none";
+    }
+
+    function showAdmin() {
+        document.getElementById("loginScreen").style.display = "none";
+        document.getElementById("adminScreen").style.display = "block";
+        loadSources(); loadStats();
+    }
+
+    async function apiCall(body) {
+        var res = await fetch(API_BASE, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authToken },
+            body: JSON.stringify(body),
+        });
+        return { ok: res.ok, data: await res.json() };
+    }
+
+    async function loadSources() {
+        try {
+            var res = await fetch(API_BASE, { headers: { "Authorization": "Bearer " + authToken } });
+            var data = await res.json();
+            if (data.success) {
+                renderSources(data.sources || []);
+                document.getElementById("customCount").textContent = data.sources.length;
+            }
+        } catch (e) { showToast("加载失败: " + e.message, "error"); }
+    }
+
+    function renderSources(sources) {
+        var list = document.getElementById("sourceList");
+        if (sources.length === 0) {
+            list.innerHTML = '<li class="empty-state"><div class="icon">&#128194;</div><p>暂无自定义接口</p></li>';
+            return;
+        }
+        list.innerHTML = sources.map(function(s) {
+            var ts = s.created_at ? new Date(s.created_at).toLocaleString("zh-CN") : "";
+            return '<li class="source-item">' +
+                '<div class="source-info">' +
+                    '<div class="name">' + escHtml(s.name) + '</div>' +
+                    '<div class="url" title="' + escHtml(s.url) + '">' + escHtml(s.url) + '</div>' +
+                    (ts ? '<div class="meta">添加时间: ' + ts + '</div>' : '') +
+                '</div>' +
+                '<div class="source-actions"><button class="btn btn-danger" onclick="delSource(\'' + s.id + '\',\'' + escHtml(s.name).replace(/'/g,"\\'") + '\')">删除</button></div>' +
+            '</li>';
+        }).join("");
+    }
+
+    function escHtml(t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
+
+    async function addSource() {
+        var name = document.getElementById("newName").value.trim();
+        var url = document.getElementById("newUrl").value.trim();
+        if (!name || !url) { showToast("请填写名称和地址", "error"); return; }
+        try {
+            var r = await apiCall({ action: "add", name: name, url: url });
+            if (r.ok) {
+                showToast('"' + name + '" 添加成功', "success");
+                document.getElementById("newName").value = "";
+                document.getElementById("newUrl").value = "";
+                loadSources(); loadStats();
+            } else { showToast(r.data.error || "添加失败", "error"); }
+        } catch (e) { showToast("添加失败: " + e.message, "error"); }
+    }
+
+    async function delSource(id, name) {
+        if (!confirm('确定删除 "' + name + '" 吗？')) return;
+        try {
+            var r = await apiCall({ action: "delete", id: id });
+            if (r.ok) { showToast('"' + name + '" 已删除', "success"); loadSources(); loadStats(); }
+            else { showToast(r.data.error || "删除失败", "error"); }
+        } catch (e) { showToast("删除失败: " + e.message, "error"); }
+    }
+
+    async function loadStats() {
+        try {
+            var res = await fetch("/download/1/tvbox/source.json");
+            if (res.ok) { var d = await res.json(); document.getElementById("totalCount").textContent = d.urls.length; }
+        } catch(e){}
+        try {
+            var lr = await fetch("/generate.log");
+            if (lr.ok) {
+                var lt = await lr.text();
+                var lines = lt.trim().split("\n");
+                for (var i = lines.length-1; i>=0; i--) {
+                    if (lines[i].includes("Done in")) {
+                        var m = lines[i].match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
+                        document.getElementById("lastUpdate").textContent = m ? m[0].slice(5) : "近日";
+                        break;
+                    }
+                }
+            }
+        } catch(e){ document.getElementById("lastUpdate").textContent="-"; }
+    }
+
+    document.getElementById("newUrl").addEventListener("keydown", function(e) { if (e.key==="Enter") addSource(); });
+</script>
+
+</body>
+</html>
