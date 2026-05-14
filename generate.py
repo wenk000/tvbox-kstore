@@ -124,7 +124,7 @@ def check_url_alive(item):
         ms = int((time.time() - t0) * 1000)
         err = type(e).__name__
         log("  [FAIL] [{}] {} -> {} ({}ms)".format(err, name, repr(url), ms))
-        return item, True, err, ms
+        return item, False, err, ms
 
 
 def check_all_sources(sources):
@@ -148,12 +148,12 @@ def check_all_sources(sources):
                 i = future_map[future]
                 item = sources[i]
                 log("  [FUTURE_ERR] {} -> {}".format(item["name"], str(e)))
-                results[i] = (item, True, "FutureError")
+                results[i] = (item, False, "FutureError", 99999)
         for future in not_done:
             i = future_map[future]
             item = sources[i]
             log("  [TIMEOUT] {} -> {}".format(item["name"], repr(item["url"])))
-            results[i] = (item, True, "Timeout")
+            results[i] = (item, False, "Timeout", 99999)
 
     # 按响应速度从快到慢排序
     alive = []
