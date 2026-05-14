@@ -172,14 +172,18 @@ def check_all_sources(sources):
     return [x[0] for x in alive], dead
 
 
-def generate_json(alive_sources):
-    config = {"notice": NOTICE_TEXT, "urls": alive_sources}
+def generate_json(alive_sources, dead_sources):
+    config = {
+        "notice": NOTICE_TEXT,
+        "urls": alive_sources,
+        "backup_urls": [x[0] for x in dead_sources]  # 临时故障线路放入备用，下次聚合可能恢复
+    }
     out_dir = "download/1/tvbox"
     os.makedirs(out_dir, exist_ok=True)
     fname = os.path.join(out_dir, "source.json")
     with open(fname, "w", encoding="utf-8") as f:
         json.dump(config, f, ensure_ascii=False, indent=4)
-    log("Generated: {} ({} entries)".format(fname, len(alive_sources)))
+    log("Generated: {} ({} alive, {} backup)".format(fname, len(alive_sources), len(dead_sources)))
     return fname
 
 
@@ -193,7 +197,7 @@ if __name__ == "__main__":
             len(all_sources), len(CANDIDATE_SOURCES), len(custom_sources)))
 
         alive_sources, dead_sources = check_all_sources(all_sources)
-        fname = generate_json(alive_sources)
+        fname = generate_json(alive_sources, dead_sources)
         with open(fname, "r", encoding="utf-8") as f:
             data = json.load(f)
         log("JSON verified OK: {} entries, notice {} chars".format(
