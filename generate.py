@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import json
 import time
 import concurrent.futures
@@ -146,26 +147,35 @@ def is_valid_tvbox_content(content_type, data):
     if not data:
         return False, "empty"
 
-    # 检查 Content-Type: text/html 基本可以确定不是 TVBox 配置
-    ct = (content_type or "").lower()
-    if "text/html" in ct:
-        return False, "html_content_type"
-
-    # 检查内容前 200 字节是否包含 HTML 标签
-    # 有些服务器不设 Content-Type 或设为 text/plain 但实际返回 HTML
+    # 先检查内容本身是否是有效格式（JSON/base64/二进制），再判断 Content-Type
+    # 这样即使服务器错误地返回 text/html 也不会误杀 JSON 配置
     sample = data[:200]
     try:
-        text = sample.decode("utf-8", errors="replace").strip().lower()
+        text = sample.decode("utf-8", errors="replace").strip()
     except Exception:
         # 二进制内容，可能是伪装文件，视为有效
         return True, "binary"
 
+    text_lower = text.lower()
+    # 如果内容以 JSON 的 { 或 [ 开头，是有效配置（无视 Content-Type）
+    if text.startswith("{") or text.startswith("["):
+        return True, "json_like"
+
+    # 如果内容看起来是 base64（纯字母数字+/=且长度>20），视为有效
+    if len(text) > 20 and re.match(r'^[A-Za-z0-9+/=\s]+$', text):
+        return True, "base64_like"
+
+    # 检查 Content-Type: text/html
+    ct = (content_type or "").lower()
+    if "text/html" in ct:
+        return False, "html_content_type"
+
+    # 检查内容是否包含 HTML 标签
     html_markers = ["<html", "<head", "<!doctype", "<body", "<meta ", "<script"]
     for marker in html_markers:
-        if marker in text:
+        if marker in text_lower:
             return False, "html_content"
 
-    # 内容不以 HTML 标签开头，可能是 JSON、base64 或其他有效格式
     return True, "ok"
 
 
