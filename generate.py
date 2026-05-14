@@ -222,52 +222,75 @@ def check_url_alive(item):
 
 
 def check_all_sources(sources, china_speed_map=None):
-    log("Phase 2: Content validation for {} sources (timeout {}s, workers {})...".format(
-        len(sources), TIMEOUT, MAX_WORKERS))
-    # results: index -> (item, is_alive, info)
-    results = {}
+    """两阶段验证策略：
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-        future_map = {}
-        for i, item in enumerate(sources):
-            future_map[executor.submit(check_url_alive, item)] = i
-        done, not_done = concurrent.futures.wait(
-            future_map.keys(), timeout=TIMEOUT * 3,
-            return_when=concurrent.futures.ALL_COMPLETED)
-        for future in done:
-            try:
-                item_result = future.result()
-                results[future_map[future]] = item_result
-            except Exception as e:
+    由于 GitHub Actions 运行在美国，很多国内 CDN 对美国 IP 返回 HTML 劫持页，
+    导致内容验证误杀大量实际在国内可用的线路。
+
+    策略：
+    - 国内测速成功的线路（china_speed_map 中有数据）→ 直接视为存活，跳过美国内容验证
+    - 国内测速失败的线路 → 走美国内容验证（HTTP 状态 + 非空 + 非HTML）
+    - 两种路径都失败的 → 放入 backup_urls
+    """
+    # 分两类：国内能测速的 vs 需要美国验证的
+    need_us_check = []
+    alive_from_china = []
+
+    for i, item in enumerate(sources):
+        name = item["name"]
+        china_ms = china_speed_map.get(name) if china_speed_map else None
+        if china_ms is not None:
+            # 国内测速成功 → 直接视为存活
+            alive_from_china.append((i, item, china_ms))
+            log("  [CN_ALIVE] {} -> {}ms (skipped US content check)".format(name, china_ms))
+        else:
+            need_us_check.append((i, item))
+
+    log("Phase 2: US content validation for {} sources ({} already alive from CN test)...".format(
+        len(need_us_check), len(alive_from_china)))
+
+    # 对需要美国验证的线路进行内容检测
+    results = {}
+    if need_us_check:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+            future_map = {}
+            for idx, (i, item) in enumerate(need_us_check):
+                future_map[executor.submit(check_url_alive, item)] = i
+            done, not_done = concurrent.futures.wait(
+                future_map.keys(), timeout=TIMEOUT * 3,
+                return_when=concurrent.futures.ALL_COMPLETED)
+            for future in done:
+                try:
+                    item_result = future.result()
+                    results[future_map[future]] = item_result
+                except Exception as e:
+                    i = future_map[future]
+                    item = sources[i]
+                    log("  [FUTURE_ERR] {} -> {}".format(item["name"], str(e)))
+                    results[i] = (item, False, "FutureError", 99999)
+            for future in not_done:
                 i = future_map[future]
                 item = sources[i]
-                log("  [FUTURE_ERR] {} -> {}".format(item["name"], str(e)))
-                results[i] = (item, False, "FutureError", 99999)
-        for future in not_done:
-            i = future_map[future]
-            item = sources[i]
-            log("  [TIMEOUT] {} -> {}".format(item["name"], repr(item["url"])))
-            results[i] = (item, False, "Timeout", 99999)
+                log("  [TIMEOUT] {} -> {}".format(item["name"], repr(item["url"])))
+                results[i] = (item, False, "Timeout", 99999)
 
-    # 分类 alive / dead
+    # 合并结果：国内存活的 + 美国验证存活的
     alive = []
     dead = []
+    for i, item, china_ms in alive_from_china:
+        alive.append((item, china_ms))
     for i in sorted(results.keys()):
         item_result = results[i]
         item = item_result[0]
         name = item["name"]
         if item_result[1]:
-            # 优先用国内延迟排序，fallback 到 GitHub Actions 延迟
-            china_ms = china_speed_map.get(name) if china_speed_map else None
-            sort_ms = china_ms if china_ms is not None else item_result[3]
-            speed_label = "{}ms(CN)".format(china_ms) if china_ms else "{}ms(US)".format(item_result[3])
-            alive.append((item, sort_ms))
+            alive.append((item, item_result[3]))
         else:
             dead.append((item, item_result[2]))
 
-    # 按国内延迟从快到慢排序
+    # 按延迟从快到慢排序
     alive.sort(key=lambda x: x[1])
-    log("Result: {} alive (sorted by speed), {} dead".format(len(alive), len(dead)))
+    log("Result: {} alive (sorted by speed), {} backup".format(len(alive), len(dead)))
     for rank, (item, ms) in enumerate(alive, 1):
         china_ms = china_speed_map.get(item["name"]) if china_speed_map else None
         label = "{}ms(CN)".format(china_ms) if china_ms else "{}ms(US-fallback)".format(ms)
