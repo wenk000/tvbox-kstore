@@ -13,7 +13,6 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
-        /* Animated background */
         body::before {
             content: '';
             position: fixed;
@@ -39,139 +38,7 @@
             padding: 40px 20px;
         }
 
-        /* ===== Login Screen ===== */
-        .login-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 80vh;
-            animation: fadeIn 0.5s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .login-logo {
-            width: 80px; height: 80px;
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-            border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 36px;
-            margin-bottom: 24px;
-            box-shadow: 0 8px 32px rgba(78, 205, 196, 0.25);
-        }
-        .login-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 8px;
-        }
-        .login-subtitle {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 32px;
-        }
-        .login-card {
-            background: rgba(30, 30, 46, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 32px;
-            width: 100%;
-            max-width: 380px;
-        }
-        .input-group {
-            margin-bottom: 20px;
-        }
-        .input-group label {
-            display: block;
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .input-group input:focus {
-            border-color: #4ecdc4;
-            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15);
-        }
-        .input-group input::placeholder {
-            color: #444;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #fff;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-            width: 100%;
-            box-shadow: 0 4px 16px rgba(78, 205, 196, 0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 24px rgba(78, 205, 196, 0.4);
-        }
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-        .btn-danger {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #ef4444;
-            padding: 6px 14px;
-            font-size: 12px;
-        }
-        .btn-danger:hover {
-            background: rgba(239, 68, 68, 0.25);
-        }
-        .btn-secondary {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #aaa;
-        }
-        .btn-secondary:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-        }
-
-        .login-error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 13px;
-            color: #ef4444;
-            margin-bottom: 16px;
-            display: none;
-        }
-
-        /* ===== Admin Dashboard ===== */
-        .admin-screen {
-            display: none;
-            animation: fadeIn 0.4s ease;
-        }
+        /* ===== Admin Header with Password Bar ===== */
         .admin-header {
             display: flex;
             align-items: center;
@@ -179,6 +46,8 @@
             margin-bottom: 32px;
             padding-bottom: 20px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
+            flex-wrap: wrap;
+            gap: 12px;
         }
         .admin-header h1 {
             font-size: 22px;
@@ -188,18 +57,120 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .admin-header .user-info {
-            display: flex; align-items: center; gap: 12px;
+        .auth-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .admin-header .user-badge {
+        .auth-bar input {
+            padding: 7px 14px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(78, 205, 196, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            width: 160px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .auth-bar input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.12);
+        }
+        .auth-bar input::placeholder { color: #444; }
+        .user-badge {
             background: rgba(78, 205, 196, 0.12);
             color: #4ecdc4;
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 5px 14px;
+            border-radius: 18px;
             font-size: 12px;
             font-weight: 600;
+            white-space: nowrap;
         }
 
+        /* ===== Lock overlay (shown when not authenticated) ===== */
+        .lock-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(16px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lock-overlay.hidden { display: none; }
+        .lock-card {
+            text-align: center;
+            padding: 40px 36px;
+        }
+        .lock-card h2 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .lock-card p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+        .lock-input-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .lock-input-row input {
+            padding: 11px 18px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(78, 205, 196, 0.25);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            width: 220px;
+        }
+        .lock-input-row input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15);
+        }
+        .lock-error {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #ef4444;
+            display: none;
+        }
+
+        /* ===== Buttons ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 9px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #fff;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            box-shadow: 0 3px 12px rgba(78, 205, 196, 0.25);
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 5px 20px rgba(78, 205, 196, 0.35); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ef4444;
+            padding: 5px 14px;
+            font-size: 12px;
+        }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.22); }
+
+        /* ===== Card ===== */
         .card {
             background: rgba(30, 30, 46, 0.7);
             backdrop-filter: blur(20px);
@@ -215,10 +186,10 @@
             margin-bottom: 20px;
         }
         .card-header .icon {
-            width: 36px; height: 36px;
-            border-radius: 10px;
+            width: 34px; height: 34px;
+            border-radius: 9px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 18px;
+            font-size: 17px;
         }
         .card-header .icon.green { background: rgba(78, 205, 196, 0.12); }
         .card-header .icon.blue { background: rgba(99, 102, 241, 0.12); }
@@ -228,10 +199,33 @@
             color: #fff;
         }
 
-        /* Source list */
-        .source-list {
-            list-style: none;
+        .input-group { margin-bottom: 16px; }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+            font-weight: 500;
         }
+        .input-group input {
+            width: 100%;
+            padding: 11px 16px;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 9px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-group input:focus {
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.12);
+        }
+        .input-group input::placeholder { color: #444; }
+
+        /* Source list */
+        .source-list { list-style: none; }
         .source-item {
             display: flex;
             align-items: center;
@@ -239,55 +233,28 @@
             padding: 14px 16px;
             border-radius: 10px;
             margin-bottom: 8px;
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.18);
             border: 1px solid rgba(255,255,255,0.04);
             transition: all 0.2s;
         }
         .source-item:hover {
-            background: rgba(0,0,0,0.35);
-            border-color: rgba(255,255,255,0.08);
+            background: rgba(0,0,0,0.32);
+            border-color: rgba(255,255,255,0.07);
         }
-        .source-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .source-info { flex: 1; min-width: 0; }
         .source-info .name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #e0e0e0;
-            margin-bottom: 4px;
+            font-size: 14px; font-weight: 600; color: #e0e0e0; margin-bottom: 4px;
         }
         .source-info .url {
-            font-size: 12px;
-            color: #666;
-            font-family: "Fira Code", monospace;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            font-size: 12px; color: #666; font-family: "Fira Code", monospace;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
-        .source-info .meta {
-            font-size: 11px;
-            color: #444;
-            margin-top: 4px;
-        }
-        .source-actions {
-            margin-left: 12px;
-            flex-shrink: 0;
-        }
+        .source-info .meta { font-size: 11px; color: #444; margin-top: 4px; }
+        .source-actions { margin-left: 12px; flex-shrink: 0; }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #555;
-        }
-        .empty-state .icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
-        .empty-state p {
-            font-size: 14px;
-        }
+        .empty-state { text-align: center; padding: 40px 20px; color: #555; }
+        .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+        .empty-state p { font-size: 14px; }
 
         /* Stats */
         .stats-row {
@@ -297,220 +264,166 @@
             margin-bottom: 20px;
         }
         .stat-card {
-            background: rgba(0,0,0,0.2);
+            background: rgba(0,0,0,0.18);
             border: 1px solid rgba(255,255,255,0.04);
             border-radius: 12px;
             padding: 16px;
             text-align: center;
         }
-        .stat-card .value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
-        }
-        .stat-card .label {
-            font-size: 12px;
-            color: #666;
-        }
+        .stat-card .value { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .stat-card .label { font-size: 12px; color: #666; }
         .stat-card .value.green { color: #4ecdc4; }
         .stat-card .value.blue { color: #6366f1; }
         .stat-card .value.pink { color: #ec4899; }
 
-        /* Toast notification */
+        /* Toast */
         .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
+            position: fixed; top: 20px; right: 20px;
             background: rgba(30, 30, 46, 0.95);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 12px;
             padding: 14px 20px;
-            font-size: 14px;
-            color: #fff;
+            font-size: 14px; color: #fff;
             z-index: 1000;
             transform: translateX(120%);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             max-width: 320px;
         }
-        .toast.show {
-            transform: translateX(0);
-        }
+        .toast.show { transform: translateX(0); }
         .toast.success { border-left: 3px solid #4ecdc4; }
         .toast.error { border-left: 3px solid #ef4444; }
-
-        /* Storage hint */
-        .storage-hint {
-            background: rgba(99, 102, 241, 0.08);
-            border: 1px solid rgba(99, 102, 241, 0.15);
-            border-radius: 10px;
-            padding: 14px 18px;
-            font-size: 13px;
-            color: #818cf8;
-            margin-bottom: 20px;
-            display: none;
-        }
 
         /* Responsive */
         @media (max-width: 640px) {
             .container { padding: 20px 16px; }
             .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .admin-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .admin-header { flex-direction: column; align-items: flex-start; gap: 14px; }
             .source-item { flex-direction: column; align-items: flex-start; gap: 10px; }
             .source-actions { margin-left: 0; }
+            .lock-input-row input { width: 180px; }
         }
 
-        /* Password toggle */
-        .password-wrapper {
-            position: relative;
-        }
-        .password-toggle {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #666;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 4px;
-        }
-        .password-toggle:hover { color: #999; }
-        .password-wrapper input { padding-right: 44px; }
+        /* Locked state blur */
+        .locked .container > *:not(.admin-header) { filter: blur(4px); pointer-events: none; opacity: 0.5; transition: all 0.3s; }
     </style>
 </head>
 <body>
 
-<!-- Login Screen -->
-<div class="login-screen" id="loginScreen">
-    <div class="login-logo">&#128225;</div>
-    <h1 class="login-title">TVBox 管理后台</h1>
-    <p class="login-subtitle">杰翔易达 - 自定义接口管理</p>
-    <div class="login-card">
-        <div class="login-error" id="loginError">密码错误，请重试</div>
+<!-- Lock Overlay -->
+<div class="lock-overlay" id="lockOverlay">
+    <div class="lock-card">
+        <h2>&#128274; 需要验证</h2>
+        <p>请输入管理密码以访问控制面板</p>
+        <div class="lock-input-row">
+            <input type="password" id="lockInput" placeholder="输入管理密码" autofocus>
+            <button class="btn btn-primary" onclick="doLogin()">确认</button>
+        </div>
+        <div class="lock-error" id="lockError">密码错误，请重试</div>
+    </div>
+</div>
+
+<!-- Main Dashboard -->
+<div class="container" id="mainContent">
+    <div class="admin-header">
+        <h1>TVBox 接口管理</h1>
+        <div class="auth-bar" id="authBar" style="display:none;">
+            <span class="user-badge">&#10003; 已认证</span>
+            <button class="btn btn-danger" onclick="logout()" style="padding: 5px 12px; font-size: 12px;">退出</button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="value green" id="customCount">-</div>
+            <div class="label">自定义接口</div>
+        </div>
+        <div class="stat-card">
+            <div class="value blue" id="totalCount">-</div>
+            <div class="label">总线路数</div>
+        </div>
+        <div class="stat-card">
+            <div class="value pink" id="lastUpdate">-</div>
+            <div class="label">上次更新</div>
+        </div>
+    </div>
+
+    <!-- Add new source -->
+    <div class="card">
+        <div class="card-header">
+            <div class="icon green">&#10133;</div>
+            <h2>添加自定义接口</h2>
+        </div>
         <div class="input-group">
-            <label>管理密码</label>
-            <div class="password-wrapper">
-                <input type="password" id="passwordInput" placeholder="请输入管理密码" autofocus>
-                <button class="password-toggle" onclick="togglePassword()" type="button">&#128065;</button>
-            </div>
+            <label>接口名称</label>
+            <input type="text" id="newName" placeholder="例如：我的线路">
         </div>
-        <button class="btn btn-primary" onclick="login()">进入管理后台</button>
+        <div class="input-group">
+            <label>接口地址</label>
+            <input type="text" id="newUrl" placeholder="例如：https://example.com/tv">
+        </div>
+        <button class="btn btn-primary" onclick="addSource()">&#10003; 添加接口</button>
+    </div>
+
+    <!-- Source list -->
+    <div class="card">
+        <div class="card-header">
+            <div class="icon blue">&#128203;</div>
+            <h2>当前自定义接口</h2>
+        </div>
+        <ul class="source-list" id="sourceList">
+            <li class="empty-state"><div class="icon">&#128194;</div><p>暂无自定义接口</p></li>
+        </ul>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #444;">
+        TVBox Admin &copy; 杰翔易达
     </div>
 </div>
 
-<!-- Admin Dashboard -->
-<div class="admin-screen" id="adminScreen">
-    <div class="container">
-        <div class="admin-header">
-            <h1>管理后台</h1>
-            <div class="user-info">
-                <span class="user-badge">&#128100; Admin</span>
-                <button class="btn btn-secondary" onclick="logout()" style="padding: 6px 14px; font-size: 12px;">退出登录</button>
-            </div>
-        </div>
-
-        <!-- Storage hint -->
-        <div class="storage-hint" id="storageHint"></div>
-
-        <!-- Stats -->
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="value green" id="customCount">-</div>
-                <div class="label">自定义接口</div>
-            </div>
-            <div class="stat-card">
-                <div class="value blue" id="totalCount">-</div>
-                <div class="label">总线路数</div>
-            </div>
-            <div class="stat-card">
-                <div class="value pink" id="lastUpdate">-</div>
-                <div class="label">上次更新</div>
-            </div>
-        </div>
-
-        <!-- Add new source -->
-        <div class="card">
-            <div class="card-header">
-                <div class="icon green">&#10133;</div>
-                <h2>添加自定义接口</h2>
-            </div>
-            <div class="input-group">
-                <label>接口名称</label>
-                <input type="text" id="newName" placeholder="例如：我的线路">
-            </div>
-            <div class="input-group">
-                <label>接口地址</label>
-                <input type="text" id="newUrl" placeholder="例如：https://example.com/tv">
-            </div>
-            <button class="btn btn-primary" onclick="addSource()" style="margin-top: 4px;">
-                &#10003; 添加接口
-            </button>
-        </div>
-
-        <!-- Source list -->
-        <div class="card">
-            <div class="card-header">
-                <div class="icon blue">&#128203;</div>
-                <h2>当前自定义接口</h2>
-            </div>
-            <ul class="source-list" id="sourceList">
-                <li class="empty-state">
-                    <div class="icon">&#128194;</div>
-                    <p>暂无自定义接口</p>
-                </li>
-            </ul>
-        </div>
-
-        <div style="text-align: center; margin-top: 20px; font-size: 12px; color: #444;">
-            TVBox Admin Panel &copy; 杰翔易达
-        </div>
-    </div>
-</div>
-
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
     const API_BASE = "/api/admin";
-    let authToken = sessionStorage.getItem("tvbox_admin_token") || null;
+    let authToken = null;
 
     // Check session on load
-    if (authToken) {
-        showAdmin();
+    var savedToken = sessionStorage.getItem("tvbox_admin_token");
+    if (savedToken) {
+        authToken = savedToken;
+        unlockUI();
+    } else {
+        lockUI();
     }
 
-    // Password input enter key
-    document.getElementById("passwordInput").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") login();
+    // Lock input enter key
+    document.getElementById("lockInput").addEventListener("keydown", function(e) {
+        if (e.key === "Enter") doLogin();
     });
 
-    function togglePassword() {
-        const input = document.getElementById("passwordInput");
-        input.type = input.type === "password" ? "text" : "password";
+    function lockUI() {
+        document.getElementById("mainContent").classList.add("locked");
+        document.getElementById("lockOverlay").classList.remove("hidden");
+        document.getElementById("authBar").style.display = "none";
     }
 
-    function showToast(message, type) {
-        const toast = document.getElementById("toast");
-        toast.textContent = message;
-        toast.className = "toast " + type + " show";
-        setTimeout(function() {
-            toast.classList.remove("show");
-        }, 3000);
+    function unlockUI() {
+        document.getElementById("mainContent").classList.remove("locked");
+        document.getElementById("lockOverlay").classList.add("hidden");
+        document.getElementById("authBar").style.display = "flex";
+        document.getElementById("lockInput").value = "";
+        document.getElementById("lockError").style.display = "none";
+        loadSources();
+        loadStats();
     }
 
-    async function login() {
-        const password = document.getElementById("passwordInput").value;
-        if (!password) {
-            document.getElementById("loginError").textContent = "请输入密码";
-            document.getElementById("loginError").style.display = "block";
-            return;
-        }
+    async function doLogin() {
+        var password = document.getElementById("lockInput").value.trim();
+        if (!password) return;
 
         try {
-            const res = await fetch(API_BASE, {
+            var res = await fetch(API_BASE, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -518,46 +431,39 @@
                 },
                 body: JSON.stringify({ action: "login" }),
             });
-
-            const data = await res.json();
-
+            var data = await res.json();
             if (res.ok) {
                 authToken = password;
                 sessionStorage.setItem("tvbox_admin_token", password);
-                showAdmin();
+                unlockUI();
             } else {
-                document.getElementById("loginError").textContent = data.error || "密码错误";
-                document.getElementById("loginError").style.display = "block";
-                document.getElementById("passwordInput").select();
+                document.getElementById("lockError").textContent = data.error || "密码错误";
+                document.getElementById("lockError").style.display = "block";
+                document.getElementById("lockInput").select();
             }
         } catch (e) {
-            document.getElementById("loginError").textContent = "连接失败: " + e.message;
-            document.getElementById("loginError").style.display = "block";
+            document.getElementById("lockError").textContent = "连接失败: " + e.message;
+            document.getElementById("lockError").style.display = "block";
         }
     }
 
     function logout() {
         authToken = null;
         sessionStorage.removeItem("tvbox_admin_token");
-        document.getElementById("loginScreen").style.display = "flex";
-        document.getElementById("adminScreen").style.display = "none";
-        document.getElementById("passwordInput").value = "";
+        lockUI();
     }
 
-    function showAdmin() {
-        document.getElementById("loginScreen").style.display = "none";
-        document.getElementById("adminScreen").style.display = "block";
-        loadSources();
-        loadStats();
+    function showToast(msg, type) {
+        var t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast " + type + " show";
+        setTimeout(function() { t.classList.remove("show"); }, 3000);
     }
 
     async function apiCall(body) {
-        const res = await fetch(API_BASE, {
+        var res = await fetch(API_BASE, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + authToken,
-            },
+            headers: { "Content-Type": "application/json", "Authorization": "Bearer " + authToken },
             body: JSON.stringify(body),
         });
         return { ok: res.ok, data: await res.json() };
@@ -565,34 +471,17 @@
 
     async function loadSources() {
         try {
-            const res = await fetch(API_BASE, {
-                headers: { "Authorization": "Bearer " + authToken },
-            });
-            const data = await res.json();
-
+            var res = await fetch(API_BASE, { headers: { "Authorization": "Bearer " + authToken } });
+            var data = await res.json();
             if (data.success) {
                 renderSources(data.sources || []);
                 document.getElementById("customCount").textContent = data.sources.length;
-
-                // Show storage hint if needed
-                const hint = document.getElementById("storageHint");
-                if (data.storage === "memory") {
-                    hint.style.display = "block";
-                    hint.textContent = "&#9888;&#65039; 当前使用内存存储，数据在部署重启后会丢失。请在 Cloudflare Pages 中绑定 KV 命名空间 (TVBOX_KV) 实现持久化存储。";
-                } else if (data.storage === "file") {
-                    hint.style.display = "block";
-                    hint.textContent = "&#9888;&#65039; 当前使用文件存储模式，添加/删除操作需要通过 GitHub 仓库的 custom_sources.json 手动管理。";
-                } else if (data.storage === "kv") {
-                    hint.style.display = "none";
-                }
             }
-        } catch (e) {
-            showToast("加载接口列表失败: " + e.message, "error");
-        }
+        } catch (e) { showToast("加载失败: " + e.message, "error"); }
     }
 
     function renderSources(sources) {
-        const list = document.getElementById("sourceList");
+        var list = document.getElementById("sourceList");
         if (sources.length === 0) {
             list.innerHTML = '<li class="empty-state"><div class="icon">&#128194;</div><p>暂无自定义接口</p></li>';
             return;
@@ -601,101 +490,65 @@
             var timeStr = s.created_at ? new Date(s.created_at).toLocaleString("zh-CN") : "";
             return '<li class="source-item">' +
                 '<div class="source-info">' +
-                    '<div class="name">' + escapeHtml(s.name) + '</div>' +
-                    '<div class="url" title="' + escapeHtml(s.url) + '">' + escapeHtml(s.url) + '</div>' +
+                    '<div class="name">' + escHtml(s.name) + '</div>' +
+                    '<div class="url" title="' + escHtml(s.url) + '">' + escHtml(s.url) + '</div>' +
                     (timeStr ? '<div class="meta">添加时间: ' + timeStr + '</div>' : '') +
                 '</div>' +
                 '<div class="source-actions">' +
-                    '<button class="btn btn-danger" onclick="deleteSource(\'' + s.id + '\', \'' + escapeHtml(s.name).replace(/'/g, "\\'") + '\')">删除</button>' +
+                    '<button class="btn btn-danger" onclick="delSource(\'' + s.id + '\',\'' + escHtml(s.name).replace(/'/g,"\\'") + '\')">删除</button>' +
                 '</div>' +
             '</li>';
         }).join("");
     }
 
-    function escapeHtml(text) {
-        var div = document.createElement("div");
-        div.textContent = text;
-        return div.innerHTML;
-    }
+    function escHtml(t) { var d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 
     async function addSource() {
         var name = document.getElementById("newName").value.trim();
         var url = document.getElementById("newUrl").value.trim();
-
-        if (!name || !url) {
-            showToast("请填写接口名称和地址", "error");
-            return;
-        }
-
+        if (!name || !url) { showToast("请填写名称和地址", "error"); return; }
         try {
-            var result = await apiCall({ action: "add", name: name, url: url });
-            if (result.ok) {
-                showToast("接口 \"" + name + "\" 添加成功", "success");
+            var r = await apiCall({ action: "add", name: name, url: url });
+            if (r.ok) {
+                showToast('"' + name + '" 添加成功', "success");
                 document.getElementById("newName").value = "";
                 document.getElementById("newUrl").value = "";
-                loadSources();
-                loadStats();
-            } else {
-                showToast(result.data.error || "添加失败", "error");
-            }
-        } catch (e) {
-            showToast("添加失败: " + e.message, "error");
-        }
+                loadSources(); loadStats();
+            } else { showToast(r.data.error || "添加失败", "error"); }
+        } catch (e) { showToast("添加失败: " + e.message, "error"); }
     }
 
-    async function deleteSource(id, name) {
-        if (!confirm("确定要删除接口 \"" + name + "\" 吗？")) return;
-
+    async function delSource(id, name) {
+        if (!confirm('确定删除 "' + name + '" 吗？')) return;
         try {
-            var result = await apiCall({ action: "delete", id: id });
-            if (result.ok) {
-                showToast("接口 \"" + name + "\" 已删除", "success");
-                loadSources();
-                loadStats();
-            } else {
-                showToast(result.data.error || "删除失败", "error");
-            }
-        } catch (e) {
-            showToast("删除失败: " + e.message, "error");
-        }
+            var r = await apiCall({ action: "delete", id: id });
+            if (r.ok) { showToast('"' + name + '" 已删除', "success"); loadSources(); loadStats(); }
+            else { showToast(r.data.error || "删除失败", "error"); }
+        } catch (e) { showToast("删除失败: " + e.message, "error"); }
     }
 
     async function loadStats() {
         try {
             var res = await fetch("/download/1/tvbox/source.json");
-            if (res.ok) {
-                var data = await res.json();
-                document.getElementById("totalCount").textContent = data.urls.length;
-            }
-        } catch (e) {}
-
-        // Get last update time from generate.log (if available)
+            if (res.ok) { var d = await res.json(); document.getElementById("totalCount").textContent = d.urls.length; }
+        } catch(e){}
         try {
-            var logRes = await fetch("/generate.log");
-            if (logRes.ok) {
-                var logText = await logRes.text();
-                var lines = logText.trim().split("\n");
-                for (var i = lines.length - 1; i >= 0; i--) {
+            var lr = await fetch("/generate.log");
+            if (lr.ok) {
+                var lt = await lr.text();
+                var lines = lt.trim().split("\n");
+                for (var i = lines.length-1; i>=0; i--) {
                     if (lines[i].includes("Done in")) {
-                        var timeMatch = lines[i].match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
-                        if (timeMatch) {
-                            document.getElementById("lastUpdate").textContent = timeMatch[0].slice(5);
-                        } else {
-                            document.getElementById("lastUpdate").textContent = "近日";
-                        }
+                        var m = lines[i].match(/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
+                        document.getElementById("lastUpdate").textContent = m ? m[0].slice(5) : "近日";
                         break;
                     }
                 }
             }
-        } catch (e) {
-            document.getElementById("lastUpdate").textContent = "-";
-        }
+        } catch(e){ document.getElementById("lastUpdate").textContent="-"; }
     }
 
-    // Enter key for add form
-    document.getElementById("newUrl").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") addSource();
-    });
+    document.getElementById("newUrl").addEventListener("keydown", function(e) { if (e.key==="Enter") addSource(); });
 </script>
 
 </body>
