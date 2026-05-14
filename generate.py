@@ -99,27 +99,48 @@ def check_url_alive(item):
     t0 = time.time()
 
     try:
-        req = Request(ascii_url, method="HEAD")
-        req.add_header("User-Agent", "Mozilla/5.0")
-        try:
-            resp = urlopen(req, timeout=TIMEOUT)
-            status = resp.status
-            resp.close()
-        except (URLError, HTTPError):
-            get_req = Request(ascii_url, method="GET")
-            get_req.add_header("User-Agent", "Mozilla/5.0")
-            get_req.add_header("Range", "bytes=0-0")
-            resp = urlopen(get_req, timeout=TIMEOUT)
-            status = resp.status
-            resp.close()
+        # 直接 GET 请求，验证返回内容是否为有效的 TVBox 配置
+        get_req = Request(ascii_url, method="GET")
+        get_req.add_header("User-Agent", "Mozilla/5.0")
+        resp = urlopen(get_req, timeout=TIMEOUT)
+        status = resp.status
+        content_type = resp.headers.get("Content-Type", "").lower()
+        data = resp.read()
+        resp.close()
 
         ms = int((time.time() - t0) * 1000)
-        if status < 400:
-            log("  [OK] [{}] {} -> {} ({}ms)".format(status, name, repr(url), ms))
+
+        # 尝试解析 JSON 并验证是否为 TVBox 配置
+        is_valid_config = False
+        config_hint = ""
+        try:
+            text = data.decode("utf-8", errors="replace").strip()
+            # 有些配置可能是 .bmp 等伪装格式，但内容是 JSON
+            if text.startswith("{") or text.startswith("["):
+                cfg = json.loads(text)
+                # TVBox 配置通常包含 urls / spider / sites / lives 等字段
+                if isinstance(cfg, dict):
+                    tvbox_keys = ["urls", "spider", "sites", "lives", "parses", "doh"]
+                    found_keys = [k for k in tvbox_keys if k in cfg]
+                    if found_keys:
+                        is_valid_config = True
+                        config_hint = "keys=" + ",".join(found_keys)
+                    else:
+                        config_hint = "json_no_tvbox_keys"
+                else:
+                    config_hint = "json_not_dict"
+            else:
+                config_hint = "not_json"
+        except (json.JSONDecodeError, ValueError) as je:
+            config_hint = "json_err"
+
+        if status < 400 and is_valid_config:
+            log("  [OK] [{}] {} -> {} ({}ms, {})".format(status, name, repr(url), ms, config_hint))
             return item, True, str(status), ms
         else:
-            log("  [WARN] [{}] {} -> {} ({}ms)".format(status, name, repr(url), ms))
-            return item, False, str(status), ms
+            reason = "{} (status={}, {})".format("invalid_config" if status < 400 else "http_err", status, config_hint)
+            log("  [WARN] [{}] {} -> {} ({}ms, {})".format("invalid" if status < 400 else status, name, repr(url), ms, reason))
+            return item, False, reason, ms
     except Exception as e:
         ms = int((time.time() - t0) * 1000)
         err = type(e).__name__
