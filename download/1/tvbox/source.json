@@ -10,10 +10,6 @@
             "name": "肥猫3"
         },
         {
-            "url": "http://fty.888484.xyz/tv",
-            "name": "饭太硬5"
-        },
-        {
             "url": "https://raw.atomgit.com/xxxooo/fan/blobs/cef5f441c422cffe4852e0fc8b102f9be6d2bb2b/in.bmp",
             "name": "饭太硬江苏郑州"
         },
@@ -26,37 +22,42 @@
             "name": "饭太硬4"
         },
         {
-            "url": "https://tv.菜妮丝.top",
-            "name": "杰翔"
-        },
-        {
-            "url": "https://tv.菜妮丝.top",
-            "name": "菜妮丝"
-        },
-        {
-            "url": "http://www.饭太硬.art/tv",
-            "name": "饭太硬3"
-        },
-        {
             "url": "http://www.饭太硬.cc/tv",
             "name": "饭太硬1"
         },
         {
-            "url": "https://盒子迷.top/禁止贩卖",
-            "name": "盒子迷"
+            "url": "http://fty.888484.xyz/tv",
+            "name": "饭太硬5"
         },
         {
             "url": "http://www.饭太硬.net/tv",
             "name": "饭太硬2"
         },
         {
-            "url": "http://fty.333232.xyz/tv",
-            "name": "饭太硬6"
+            "url": "https://盒子迷.top/禁止贩卖",
+            "name": "盒子迷"
         },
+        {
+            "url": "https://tv.菜妮丝.top",
+            "name": "杰翔"
+        },
+        {
+            "url": "http://www.饭太硬.art/tv",
+            "name": "饭太硬3"
+        },
+        {
+            "url": "https://tv.菜妮丝.top",
+            "name": "菜妮丝"
+        }
+    ],
+    "backup_urls": [
         {
             "url": "http://tvbox.王二小放牛娃.top",
             "name": "王二小"
+        },
+        {
+            "url": "http://fty.333232.xyz/tv",
+            "name": "饭太硬6"
         }
-    ],
-    "backup_urls": []
+    ]
 }

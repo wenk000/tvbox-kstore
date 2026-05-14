@@ -130,8 +130,10 @@ def url_to_ascii(url):
 def check_url_alive(item):
     """HTTP 连通性检测：HTTP < 400 + 非空响应 = 存活。
 
-    不做内容格式验证，因为 GitHub Actions 美国节点访问国内 CDN 时
-    经常返回 HTML 劫持页（区域限制），不代表国内用户也无法使用。
+    不做内容格式验证，原因：
+    1. GitHub Actions 美国节点访问国内 CDN 时经常返回 HTML 劫持页（区域限制）
+    2. 国内 CDN 常用 text/html Content-Type 返回 JSON/base64 配置
+    3. TVBox 客户端会自动跳过无法解析的源，无需在这里做严格过滤
     """
     url = item["url"]
     name = item["name"]
@@ -197,8 +199,13 @@ def check_all_sources(sources, china_speed_map=None):
                 return_when=concurrent.futures.ALL_COMPLETED)
             for future in done:
                 try:
-                    item_result = future.result()
+                    item_result = future.result(timeout=1)
                     results[future_map[future]] = item_result
+                except concurrent.futures.TimeoutError:
+                    i = future_map[future]
+                    item = sources[i]
+                    log("  [RESULT_TIMEOUT] {} -> getting result timed out".format(item["name"]))
+                    results[i] = (item, False, "ResultTimeout", 99999)
                 except Exception as e:
                     i = future_map[future]
                     item = sources[i]
