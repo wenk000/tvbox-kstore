@@ -18,32 +18,12 @@
             "name": "饭太硬江苏郑州"
         },
         {
-            "url": "http://fty.xxooo.cf/tv",
-            "name": "饭太硬4"
-        },
-        {
             "url": "https://gh-proxy.com/https://raw.githubusercontent.com/guot55/yg/main/pg/bh.json",
             "name": "寳盒"
         },
         {
-            "url": "http://fty.333232.xyz/tv",
-            "name": "饭太硬6"
-        },
-        {
-            "url": "http://www.饭太硬.art/tv",
-            "name": "饭太硬3"
-        },
-        {
-            "url": "http://www.饭太硬.net/tv",
-            "name": "饭太硬2"
-        },
-        {
-            "url": "http://www.饭太硬.cc/tv",
-            "name": "饭太硬1"
-        },
-        {
-            "url": "https://盒子迷.top/禁止贩卖",
-            "name": "盒子迷"
+            "url": "http://fty.xxooo.cf/tv",
+            "name": "饭太硬4"
         },
         {
             "url": "https://tv.菜妮丝.top",
@@ -52,12 +32,32 @@
         {
             "url": "https://tv.菜妮丝.top",
             "name": "杰翔"
+        },
+        {
+            "url": "http://fty.333232.xyz/tv",
+            "name": "饭太硬6"
+        },
+        {
+            "url": "https://盒子迷.top/禁止贩卖",
+            "name": "盒子迷"
+        },
+        {
+            "url": "http://www.饭太硬.cc/tv",
+            "name": "饭太硬1"
+        },
+        {
+            "url": "http://www.饭太硬.net/tv",
+            "name": "饭太硬2"
+        },
+        {
+            "url": "http://tvbox.王二小放牛娃.top",
+            "name": "王二小"
         }
     ],
     "backup_urls": [
         {
-            "url": "http://tvbox.王二小放牛娃.top",
-            "name": "王二小"
+            "url": "http://www.饭太硬.art/tv",
+            "name": "饭太硬3"
         }
     ]
 }

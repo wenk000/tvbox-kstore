@@ -106,3 +106,56 @@ Generated: download/1/tvbox/source.json (14 alive, 0 backup)
 JSON verified OK: 14 entries, notice 104 chars
 Done in 22.4s
 === END ===
+=== generate.py START ===
+Python 3.11
+Loaded 0 custom sources from custom_sources.json
+Total sources: 14 (built-in: 14, custom: 0)
+Phase 1: China speed test for 14 sources...
+  [CHINA] 杰翔 -> N/A (API failed, will use fallback)
+  [CHINA] 王二小 -> N/A (API failed, will use fallback)
+  [CHINA] 肥猫2 -> 104ms
+  [CHINA] 肥猫3 -> 107ms
+  [CHINA] 盒子迷 -> N/A (API failed, will use fallback)
+  [CHINA] 菜妮丝 -> N/A (API failed, will use fallback)
+  [CHINA] 寳盒 -> 242ms
+  [CHINA] 饭太硬1 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬2 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬3 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬4 -> 321ms
+  [CHINA] 饭太硬5 -> 208ms
+  [CHINA] 饭太硬6 -> 631ms
+  [CHINA] 饭太硬江苏郑州 -> 230ms
+China speed test done: 7/14 sources got CN latency
+  [CN_ALIVE] 肥猫2 -> 104ms (skipped US check)
+  [CN_ALIVE] 肥猫3 -> 107ms (skipped US check)
+  [CN_ALIVE] 寳盒 -> 242ms (skipped US check)
+  [CN_ALIVE] 饭太硬4 -> 321ms (skipped US check)
+  [CN_ALIVE] 饭太硬5 -> 208ms (skipped US check)
+  [CN_ALIVE] 饭太硬6 -> 631ms (skipped US check)
+  [CN_ALIVE] 饭太硬江苏郑州 -> 230ms (skipped US check)
+Phase 2: HTTP connectivity check for 7 sources (7 already alive from CN)...
+  [OK] [200] 菜妮丝 -> 'https://tv.菜妮丝.top' (550ms, 2830bytes)
+  [OK] [200] 杰翔 -> 'https://tv.菜妮丝.top' (559ms, 2830bytes)
+  [OK] [200] 盒子迷 -> 'https://盒子迷.top/禁止贩卖' (692ms, 53900bytes)
+  [OK] [200] 饭太硬1 -> 'http://www.饭太硬.cc/tv' (692ms, 16004bytes)
+  [OK] [200] 饭太硬2 -> 'http://www.饭太硬.net/tv' (791ms, 16004bytes)
+  [FAIL] [HTTPError] 饭太硬3 -> 'http://www.饭太硬.art/tv' (1237ms)
+  [OK] [200] 王二小 -> 'http://tvbox.王二小放牛娃.top' (1588ms, 2113bytes)
+Result: 13 alive (sorted by speed), 1 backup
+  #1 肥猫2 -> 104ms(CN)
+  #2 肥猫3 -> 107ms(CN)
+  #3 饭太硬5 -> 208ms(CN)
+  #4 饭太硬江苏郑州 -> 230ms(CN)
+  #5 寳盒 -> 242ms(CN)
+  #6 饭太硬4 -> 321ms(CN)
+  #7 菜妮丝 -> 550ms(US-fallback)
+  #8 杰翔 -> 559ms(US-fallback)
+  #9 饭太硬6 -> 631ms(CN)
+  #10 盒子迷 -> 692ms(US-fallback)
+  #11 饭太硬1 -> 692ms(US-fallback)
+  #12 饭太硬2 -> 791ms(US-fallback)
+  #13 王二小 -> 1588ms(US-fallback)
+Generated: download/1/tvbox/source.json (13 alive, 1 backup)
+JSON verified OK: 13 entries, notice 104 chars
+Done in 18.7s
+=== END ===
