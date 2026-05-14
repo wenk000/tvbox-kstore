@@ -99,48 +99,26 @@ def check_url_alive(item):
     t0 = time.time()
 
     try:
-        # 直接 GET 请求，验证返回内容是否为有效的 TVBox 配置
+        # GET 请求并跟随重定向，检查是否有有效响应内容
         get_req = Request(ascii_url, method="GET")
         get_req.add_header("User-Agent", "Mozilla/5.0")
         resp = urlopen(get_req, timeout=TIMEOUT)
         status = resp.status
-        content_type = resp.headers.get("Content-Type", "").lower()
         data = resp.read()
         resp.close()
 
         ms = int((time.time() - t0) * 1000)
 
-        # 尝试解析 JSON 并验证是否为 TVBox 配置
-        is_valid_config = False
-        config_hint = ""
-        try:
-            text = data.decode("utf-8", errors="replace").strip()
-            # 有些配置可能是 .bmp 等伪装格式，但内容是 JSON
-            if text.startswith("{") or text.startswith("["):
-                cfg = json.loads(text)
-                # TVBox 配置通常包含 urls / spider / sites / lives 等字段
-                if isinstance(cfg, dict):
-                    tvbox_keys = ["urls", "spider", "sites", "lives", "parses", "doh"]
-                    found_keys = [k for k in tvbox_keys if k in cfg]
-                    if found_keys:
-                        is_valid_config = True
-                        config_hint = "keys=" + ",".join(found_keys)
-                    else:
-                        config_hint = "json_no_tvbox_keys"
-                else:
-                    config_hint = "json_not_dict"
-            else:
-                config_hint = "not_json"
-        except (json.JSONDecodeError, ValueError) as je:
-            config_hint = "json_err"
-
-        if status < 400 and is_valid_config:
-            log("  [OK] [{}] {} -> {} ({}ms, {})".format(status, name, repr(url), ms, config_hint))
+        # 判断是否有有效内容（非空响应）
+        content_len = len(data)
+        if content_len > 0:
+            # 取前100字节作为内容摘要用于日志
+            snippet = data[:100].decode("utf-8", errors="replace").strip()
+            log("  [OK] [{}] {} -> {} ({}ms, {}bytes)".format(status, name, repr(url), ms, content_len))
             return item, True, str(status), ms
         else:
-            reason = "{} (status={}, {})".format("invalid_config" if status < 400 else "http_err", status, config_hint)
-            log("  [WARN] [{}] {} -> {} ({}ms, {})".format("invalid" if status < 400 else status, name, repr(url), ms, reason))
-            return item, False, reason, ms
+            log("  [WARN] [{}] {} -> {} ({}ms, empty)".format(status, name, repr(url), ms))
+            return item, False, "empty_response", ms
     except Exception as e:
         ms = int((time.time() - t0) * 1000)
         err = type(e).__name__
