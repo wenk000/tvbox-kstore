@@ -244,8 +244,9 @@ def generate_json(alive_sources, dead_sources):
     config = {
         "notice": NOTICE_TEXT,
         "urls": alive_sources,
-        "backup_urls": [x[0] for x in dead_sources]
     }
+    if dead_sources:
+        config["backup_urls"] = [x[0] for x in dead_sources]
     out_dir = "download/1/tvbox"
     os.makedirs(out_dir, exist_ok=True)
     fname = os.path.join(out_dir, "source.json")
