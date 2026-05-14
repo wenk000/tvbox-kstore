@@ -50,7 +50,44 @@ CANDIDATE_SOURCES = [
 TIMEOUT = 8
 MAX_WORKERS = 10
 CUSTOM_SOURCES_FILE = "custom_sources.json"
+CHINA_SPEED_API = "https://v2.xxapi.cn/api/speed"  # 国内测速 API
 # ============================================================
+
+
+def check_speed_china(url):
+    """通过国内 API 检测 URL 的国内访问延迟，返回毫秒数，失败返回 None"""
+    try:
+        api_url = CHINA_SPEED_API + "?url=" + quote(url, safe=":/")
+        req = Request(api_url, method="GET")
+        req.add_header("User-Agent", "Mozilla/5.0")
+        resp = urlopen(req, timeout=TIMEOUT * 2)
+        data = json.loads(resp.read().decode("utf-8"))
+        resp.close()
+        if data.get("code") == 200 and data.get("data"):
+            # data 格式: "681ms"
+            ms_str = str(data["data"]).replace("ms", "").strip()
+            return int(ms_str)
+    except Exception as e:
+        log("  [CHINA_API_ERR] {} -> {}".format(url[:50], str(e)))
+    return None
+
+
+def check_all_china_speeds(sources):
+    """阶段1：通过国内 API 批量检测所有线路的国内延迟"""
+    log("Phase 1: China speed test for {} sources...".format(len(sources)))
+    speed_map = {}  # name -> china_ms
+
+    for item in sources:
+        name = item["name"]
+        url = item["url"]
+        ms = check_speed_china(url)
+        if ms is not None:
+            speed_map[name] = ms
+            log("  [CHINA] {} -> {}ms".format(name, ms))
+        else:
+            log("  [CHINA] {} -> N/A (API failed, will use fallback)".format(name))
+
+    return speed_map
 
 
 def load_custom_sources():
@@ -128,8 +165,8 @@ def check_url_alive(item):
         return item, False, err, ms
 
 
-def check_all_sources(sources):
-    log("Scanning {} sources (timeout {}s, workers {})...".format(
+def check_all_sources(sources, china_speed_map=None):
+    log("Phase 2: Content validation for {} sources (timeout {}s, workers {})...".format(
         len(sources), TIMEOUT, MAX_WORKERS))
     # results: index -> (item, is_alive, info)
     results = {}
@@ -156,20 +193,29 @@ def check_all_sources(sources):
             log("  [TIMEOUT] {} -> {}".format(item["name"], repr(item["url"])))
             results[i] = (item, False, "Timeout", 99999)
 
-    # 按响应速度从快到慢排序
+    # 分类 alive / dead
     alive = []
     dead = []
     for i in sorted(results.keys()):
         item_result = results[i]
+        item = item_result[0]
+        name = item["name"]
         if item_result[1]:
-            alive.append((item_result[0], item_result[3]))
+            # 优先用国内延迟排序，fallback 到 GitHub Actions 延迟
+            china_ms = china_speed_map.get(name) if china_speed_map else None
+            sort_ms = china_ms if china_ms is not None else item_result[3]
+            speed_label = "{}ms(CN)".format(china_ms) if china_ms else "{}ms(US)".format(item_result[3])
+            alive.append((item, sort_ms))
         else:
-            dead.append((item_result[0], item_result[2]))
+            dead.append((item, item_result[2]))
 
+    # 按国内延迟从快到慢排序
     alive.sort(key=lambda x: x[1])
     log("Result: {} alive (sorted by speed), {} dead".format(len(alive), len(dead)))
     for rank, (item, ms) in enumerate(alive, 1):
-        log("  #{} {} -> {}ms".format(rank, item["name"], ms))
+        china_ms = china_speed_map.get(item["name"]) if china_speed_map else None
+        label = "{}ms(CN)".format(china_ms) if china_ms else "{}ms(US-fallback)".format(ms)
+        log("  #{} {} -> {}".format(rank, item["name"], label))
     return [x[0] for x in alive], dead
 
 
@@ -197,7 +243,13 @@ if __name__ == "__main__":
         log("Total sources: {} (built-in: {}, custom: {})".format(
             len(all_sources), len(CANDIDATE_SOURCES), len(custom_sources)))
 
-        alive_sources, dead_sources = check_all_sources(all_sources)
+        # 阶段1：国内节点测速排序
+        china_speed_map = check_all_china_speeds(all_sources)
+        log("China speed test done: {}/{} sources got CN latency".format(
+            len(china_speed_map), len(all_sources)))
+
+        # 阶段2：内容有效性验证 + 按国内速度排序
+        alive_sources, dead_sources = check_all_sources(all_sources, china_speed_map)
         fname = generate_json(alive_sources, dead_sources)
         with open(fname, "r", encoding="utf-8") as f:
             data = json.load(f)
