@@ -259,6 +259,31 @@
         .stat-card .value.green { color: #4ecdc4; }
         .stat-card .value.blue { color: #6366f1; }
         .stat-card .value.pink { color: #ec4899; }
+        .stat-card .value.orange { color: #f59e0b; }
+        .stat-card.trigger-card {
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            border-color: rgba(78, 205, 196, 0.2);
+        }
+        .stat-card.trigger-card:hover {
+            background: rgba(78, 205, 196, 0.08);
+            border-color: rgba(78, 205, 196, 0.4);
+            transform: translateY(-2px);
+        }
+        .stat-card.trigger-card:active { transform: translateY(0); }
+        .stat-card.trigger-card .value { color: #4ecdc4; }
+        .stat-card.trigger-card.running { border-color: rgba(245, 158, 11, 0.3); }
+        .stat-card.trigger-card.running:hover { background: rgba(245, 158, 11, 0.08); border-color: rgba(245, 158, 11, 0.5); }
+        .stat-card.trigger-card.running .value { color: #f59e0b; }
+        .spinner {
+            display: inline-block; width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle; margin-right: 4px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* Toast notification */
         .toast {
@@ -384,6 +409,10 @@
             <div class="stat-card" style="cursor:pointer" onclick="viewLog()" title="点击查看完整日志">
                 <div class="value pink" id="lastUpdate">-</div>
                 <div class="label">上次更新 &#128221;</div>
+            </div>
+            <div class="stat-card trigger-card" id="triggerCard" onclick="triggerBuild()" title="手动触发构建">
+                <div class="value" id="triggerBtnText">&#9654; 触发构建</div>
+                <div class="label" id="triggerLabel">点击立即更新</div>
             </div>
         </div>
 
@@ -591,6 +620,73 @@
                 }
             }
         } catch(e){ document.getElementById("lastUpdate").textContent="-"; }
+        // Also check if a build is currently running
+        checkBuildStatus();
+    }
+
+    var isBuilding = false;
+
+    async function checkBuildStatus() {
+        try {
+            var r = await apiCall({ action: "status" });
+            if (r.ok && r.data.success) {
+                var card = document.getElementById("triggerCard");
+                var btn = document.getElementById("triggerBtnText");
+                var label = document.getElementById("triggerLabel");
+                if (r.data.running) {
+                    isBuilding = true;
+                    card.classList.add("running");
+                    btn.innerHTML = '<span class="spinner"></span>构建中...';
+                    label.textContent = "运行中，请稍候";
+                    // Re-check every 15s
+                    setTimeout(checkBuildStatus, 15000);
+                } else {
+                    isBuilding = false;
+                    card.classList.remove("running");
+                    btn.innerHTML = '&#9654; 触发构建';
+                    var conc = r.data.conclusion;
+                    if (conc === "success") {
+                        label.textContent = "上次: 成功 ✓";
+                    } else if (conc === "failure") {
+                        label.textContent = "上次: 失败 ✗";
+                    } else {
+                        label.textContent = "点击立即更新";
+                    }
+                }
+            }
+        } catch(e) {}
+    }
+
+    async function triggerBuild() {
+        if (isBuilding) {
+            showToast("构建正在进行中，请稍候...", "error");
+            return;
+        }
+        var card = document.getElementById("triggerCard");
+        var btn = document.getElementById("triggerBtnText");
+        var label = document.getElementById("triggerLabel");
+        btn.innerHTML = '<span class="spinner"></span>触发中...';
+        label.textContent = "请稍候";
+        try {
+            var r = await apiCall({ action: "trigger" });
+            if (r.ok && r.data.success) {
+                isBuilding = true;
+                card.classList.add("running");
+                btn.innerHTML = '<span class="spinner"></span>构建中...';
+                label.textContent = "已触发，部署中...";
+                showToast(r.data.message || "构建已触发！", "success");
+                // Start polling status
+                setTimeout(checkBuildStatus, 5000);
+            } else {
+                btn.innerHTML = '&#9654; 触发构建';
+                label.textContent = "点击立即更新";
+                showToast(r.data.error || "触发失败", "error");
+            }
+        } catch (e) {
+            btn.innerHTML = '&#9654; 触发构建';
+            label.textContent = "点击立即更新";
+            showToast("触发失败: " + e.message, "error");
+        }
     }
 
     document.getElementById("newUrl").addEventListener("keydown", function(e) { if (e.key==="Enter") addSource(); });
