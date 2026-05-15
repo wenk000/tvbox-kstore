@@ -19,6 +19,7 @@ def log(msg):
         pass
 
 log("=== generate.py START ===")
+log("Timestamp: " + time.strftime("%Y-%m-%d %H:%M:%S"))
 log("Python {}.{}".format(sys.version_info.major, sys.version_info.minor))
 
 # ============================================================
