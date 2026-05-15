@@ -11,7 +11,7 @@ const RAW_BASE    = "https://raw.githubusercontent.com/" + REPO_OWNER + "/" + RE
 const corsHeaders = { "Access-Control-Allow-Origin": "*", "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS", "Access-Control-Allow-Headers": "Content-Type, Authorization" };
 function jsonResponse(data, status = 200) { return new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json", ...corsHeaders } }); }
 function verifyAuth(request) { const authHeader = request.headers.get("Authorization") || ""; const adminPass = typeof ADMIN_PASSWORD !== "undefined" ? ADMIN_PASSWORD : "admin"; return authHeader === "Bearer " + adminPass; }
-async function readSources() { try { const res = await fetch(RAW_BASE); if (res.ok) return await res.json(); } catch(e) {} return []; }
+async function readSources() { try { const res = await fetch(RAW_BASE + "?t=" + Date.now()); if (res.ok) return await res.json(); } catch(e) {} return []; }
 async function ghApi(token, path, method, body) {
   var url = GITHUB_API + path;
   var opts = { method: method, headers: { "Content-Type": "application/json", "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "tvbox-kstore-pages/1.0", "Authorization": "Bearer " + token } };
