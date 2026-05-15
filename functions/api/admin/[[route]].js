@@ -13,7 +13,7 @@ function verifyAuth(request) { const authHeader = request.headers.get("Authoriza
 async function readSources() { try { const res = await fetch(RAW_BASE); if (res.ok) return await res.json(); } catch(e) {} return []; }
 async function ghApi(token, path, method, body) {
   var url = GITHUB_API + path + (path.includes("?") ? "&" : "?") + "access_token=" + encodeURIComponent(token);
-  var opts = { method: method, headers: { "Content-Type": "application/json", Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" } };
+  var opts = { method: method, headers: { "Content-Type": "application/json", Accept: "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "User-Agent": "tvbox-kstore-pages/1.0" } };
   if (body) opts.body = JSON.stringify(body);
   var res = await fetch(url, opts);
   var text = await res.text();
