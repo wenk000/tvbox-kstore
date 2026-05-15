@@ -361,3 +361,54 @@ Generated: download/1/tvbox/source.json (13 alive, 0 backup)
 JSON verified OK: 13 entries, notice 104 chars
 Done in 37.4s
 === END ===
+=== generate.py START ===
+Python 3.11
+Loaded 0 custom sources from custom_sources.json
+Total sources: 13 (built-in: 13, custom: 0)
+Phase 1: China speed test for 13 sources...
+  [CHINA] 杰翔 -> N/A (API failed, will use fallback)
+  [CHINA] 王二小 -> N/A (API failed, will use fallback)
+  [CHINA] 肥猫2 -> 483ms
+  [CHINA] 肥猫3 -> 122ms
+  [CHINA] 盒子迷 -> N/A (API failed, will use fallback)
+  [CHINA] 寳盒 -> 412ms
+  [CHINA] 饭太硬1 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬2 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬3 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬4 -> 309ms
+  [CHINA] 饭太硬5 -> 117ms
+  [CHINA] 饭太硬6 -> 478ms
+  [CHINA] 饭太硬江苏郑州 -> 222ms
+China speed test done: 7/13 sources got CN latency
+  [CN_ALIVE] 肥猫2 -> 483ms (skipped US check)
+  [CN_ALIVE] 肥猫3 -> 122ms (skipped US check)
+  [CN_ALIVE] 寳盒 -> 412ms (skipped US check)
+  [CN_ALIVE] 饭太硬4 -> 309ms (skipped US check)
+  [CN_ALIVE] 饭太硬5 -> 117ms (skipped US check)
+  [CN_ALIVE] 饭太硬6 -> 478ms (skipped US check)
+  [CN_ALIVE] 饭太硬江苏郑州 -> 222ms (skipped US check)
+Phase 2: HTTP connectivity check for 6 sources (7 already alive from CN)...
+  [OK] [200] 盒子迷 -> 'https://盒子迷.top/禁止贩卖' (590ms, 53900bytes)
+  [OK] [200] 杰翔 -> 'https://tv.菜妮丝.top' (813ms, 2830bytes)
+  [OK] [200] 饭太硬1 -> 'http://www.饭太硬.cc/tv' (828ms, 16004bytes)
+  [OK] [200] 饭太硬2 -> 'http://www.饭太硬.net/tv' (841ms, 16004bytes)
+  [OK] [200] 饭太硬3 -> 'http://www.饭太硬.art/tv' (1030ms, 20595bytes)
+  [OK] [200] 王二小 -> 'http://tvbox.王二小放牛娃.top' (2006ms, 2113bytes)
+Result: 13 alive (sorted by speed), 0 backup
+  #1 饭太硬5 -> 117ms(CN)
+  #2 肥猫3 -> 122ms(CN)
+  #3 饭太硬江苏郑州 -> 222ms(CN)
+  #4 饭太硬4 -> 309ms(CN)
+  #5 寳盒 -> 412ms(CN)
+  #6 饭太硬6 -> 478ms(CN)
+  #7 肥猫2 -> 483ms(CN)
+  #8 盒子迷 -> 590ms(US-fallback)
+  #9 杰翔 -> 813ms(US-fallback)
+  #10 饭太硬1 -> 828ms(US-fallback)
+  #11 饭太硬2 -> 841ms(US-fallback)
+  #12 饭太硬3 -> 1030ms(US-fallback)
+  #13 王二小 -> 2006ms(US-fallback)
+Generated: download/1/tvbox/source.json (13 alive, 0 backup)
+JSON verified OK: 13 entries, notice 104 chars
+Done in 15.2s
+=== END ===
