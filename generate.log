@@ -1445,3 +1445,70 @@ Generated: download/1/tvbox/source.json (18 alive, 0 backup)
 JSON verified OK: 18 entries, notice 104 chars
 Done in 27.6s
 === END ===
+=== generate.py START ===
+Timestamp: 2026-05-17 08:09:36
+Python 3.11
+Loaded 5 custom sources from custom_sources.json
+Total sources: 18 (built-in: 13, custom: 5)
+Phase 1: China speed test for 18 sources...
+  [CHINA] 杰翔 -> N/A (API failed, will use fallback)
+  [CHINA] 王二小 -> N/A (API failed, will use fallback)
+  [CHINA] 肥猫2 -> 296ms
+  [CHINA] 肥猫3 -> 157ms
+  [CHINA] 盒子迷 -> N/A (API failed, will use fallback)
+  [CHINA] 寳盒 -> 781ms
+  [CHINA] 饭太硬1 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬2 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬3 -> N/A (API failed, will use fallback)
+  [CHINA] 饭太硬4 -> 318ms
+  [CHINA] 饭太硬5 -> 546ms
+  [CHINA] 饭太硬6 -> 450ms
+  [CHINA] 饭太硬江苏郑州 -> 239ms
+  [CHINA] 肥猫影视 -> N/A (API failed, will use fallback)
+  [CHINA] 肥猫4 -> N/A (API failed, will use fallback)
+  [CHINA] 肥猫5 -> N/A (API failed, will use fallback)
+  [CHINA] 牛二 -> 782ms
+  [CHINA] 驸马 -> 255ms
+China speed test done: 9/18 sources got CN latency
+  [CN_ALIVE] 肥猫2 -> 296ms (skipped US check)
+  [CN_ALIVE] 肥猫3 -> 157ms (skipped US check)
+  [CN_ALIVE] 寳盒 -> 781ms (skipped US check)
+  [CN_ALIVE] 饭太硬4 -> 318ms (skipped US check)
+  [CN_ALIVE] 饭太硬5 -> 546ms (skipped US check)
+  [CN_ALIVE] 饭太硬6 -> 450ms (skipped US check)
+  [CN_ALIVE] 饭太硬江苏郑州 -> 239ms (skipped US check)
+  [CN_ALIVE] 牛二 -> 782ms (skipped US check)
+  [CN_ALIVE] 驸马 -> 255ms (skipped US check)
+Phase 2: HTTP connectivity check for 9 sources (9 already alive from CN)...
+  [OK] [200] 肥猫影视 -> 'http://肥猫.net/' (87ms, 9924bytes)
+  [OK] [200] 肥猫5 -> 'http://肥猫.net/tv' (207ms, 18473bytes)
+  [OK] [200] 肥猫4 -> 'http://hello.肥猫.net' (210ms, 18473bytes)
+  [OK] [200] 杰翔 -> 'https://tv.菜妮丝.top' (410ms, 2830bytes)
+  [OK] [200] 盒子迷 -> 'https://盒子迷.top/禁止贩卖' (505ms, 19234bytes)
+  [OK] [200] 饭太硬1 -> 'http://www.饭太硬.cc/tv' (798ms, 16003bytes)
+  [OK] [200] 饭太硬3 -> 'http://www.饭太硬.art/tv' (1264ms, 20579bytes)
+  [OK] [200] 饭太硬2 -> 'http://www.饭太硬.net/tv' (1362ms, 16003bytes)
+  [OK] [200] 王二小 -> 'http://tvbox.王二小放牛娃.top' (1873ms, 2113bytes)
+Result: 18 alive (sorted by speed), 0 backup
+  #1 肥猫影视 -> 87ms(US-fallback)
+  #2 肥猫3 -> 157ms(CN)
+  #3 肥猫5 -> 207ms(US-fallback)
+  #4 肥猫4 -> 210ms(US-fallback)
+  #5 饭太硬江苏郑州 -> 239ms(CN)
+  #6 驸马 -> 255ms(CN)
+  #7 肥猫2 -> 296ms(CN)
+  #8 饭太硬4 -> 318ms(CN)
+  #9 杰翔 -> 410ms(US-fallback)
+  #10 饭太硬6 -> 450ms(CN)
+  #11 盒子迷 -> 505ms(US-fallback)
+  #12 饭太硬5 -> 546ms(CN)
+  #13 寳盒 -> 781ms(CN)
+  #14 牛二 -> 782ms(CN)
+  #15 饭太硬1 -> 798ms(US-fallback)
+  #16 饭太硬3 -> 1264ms(US-fallback)
+  #17 饭太硬2 -> 1362ms(US-fallback)
+  #18 王二小 -> 1873ms(US-fallback)
+Generated: download/1/tvbox/source.json (18 alive, 0 backup)
+JSON verified OK: 18 entries, notice 104 chars
+Done in 20.6s
+=== END ===
