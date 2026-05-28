@@ -33,13 +33,11 @@ async function getSha(token) {
 export async function onRequestGet(context) {
   const { request } = context;
   // 1. 优先放行 OPTIONS 预检请求（必须写在 verifyAuth 之前！）
-if (request.method === 'OPTIONS') {
-  return new Response(null, { status: 204, headers: corsHeaders });
+if (request.method === 'OPTIONS') { return new Response(null, { status: 204, headers: corsHeaders });
 }
 
 // 2. 预检请求通过后，再进行身份校验
-if (!verifyAuth(request)) {
-  return jsonResponse({ error: '未授权' }, 401);
+if (!verifyAuth(request)) { return jsonResponse({ error: '未授权' }, 401);
 }
   //if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
   //if (!verifyAuth(request)) return jsonResponse({ error: "未授权" }, 401);
