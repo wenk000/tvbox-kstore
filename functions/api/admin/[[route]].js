@@ -2,7 +2,7 @@
  * Cloudflare Pages Function - Admin API
  */
 export const config = { runtime: "edge" };
-const REPO_OWNER = "haonanren118";
+const REPO_OWNER = "wenk000";
 const REPO_NAME  = "tvbox-kstore";
 const FILE_PATH   = "custom_sources.json";
 const WORKFLOW_ID = "generate.yml";
