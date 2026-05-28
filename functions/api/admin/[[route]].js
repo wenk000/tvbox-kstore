@@ -32,8 +32,17 @@ async function getSha(token) {
 }
 export async function onRequestGet(context) {
   const { request } = context;
-  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
-  if (!verifyAuth(request)) return jsonResponse({ error: "未授权" }, 401);
+  // 1. 优先放行 OPTIONS 预检请求（必须写在 verifyAuth 之前！）
+if (request.method === 'OPTIONS') {
+  return new Response(null, { status: 204, headers: corsHeaders });
+}
+
+// 2. 预检请求通过后，再进行身份校验
+if (!verifyAuth(request)) {
+  return jsonResponse({ error: '未授权' }, 401);
+}
+  //if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
+  //if (!verifyAuth(request)) return jsonResponse({ error: "未授权" }, 401);
   const token = context.env && context.env.GITHUB_TOKEN;
   if (!token) return jsonResponse({ error: "GITHUB_TOKEN 未配置" }, 500);
   try {
@@ -86,7 +95,7 @@ export async function onRequestPost(context) {
         const runs = await ghApi(token, `/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_ID}/runs?per_page=1`, "GET", null);
         const latest = runs && runs.workflow_runs && runs.workflow_runs[0];
         return jsonResponse({
-          success: true,
+          success: true，
           running: latest ? (latest.status === "in_progress" || latest.status === "queued") : false,
           status: latest ? latest.status : "unknown",
           conclusion: latest ? latest.conclusion : null,
