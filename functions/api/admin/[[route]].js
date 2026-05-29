@@ -2,7 +2,7 @@
  * Cloudflare Pages Function - Admin API
  */
 export const config = { runtime: "edge" };
-const REPO_OWNER = "wenk000";
+const REPO_OWNER = "haonanren118";
 const REPO_NAME  = "tvbox-kstore";
 const FILE_PATH   = "custom_sources.json";
 const WORKFLOW_ID = "generate.yml";
@@ -32,13 +32,8 @@ async function getSha(token) {
 }
 export async function onRequestGet(context) {
   const { request } = context;
-  if (request.method === 'OPTIONS') { return new Response(null, { status: 204, headers: corsHeaders });
-}
-
- if (!verifyAuth(request)) { return jsonResponse({ error: '未授权' }, 401);
-}
-  //if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
-  //if (!verifyAuth(request)) return jsonResponse({ error: "未授权" }, 401);
+ if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
+ if (!verifyAuth(request)) return jsonResponse({ error: "未授权" }, 401);
   const token = context.env && context.env.GITHUB_TOKEN;
   if (!token) return jsonResponse({ error: "GITHUB_TOKEN 未配置" }, 500);
   try {
